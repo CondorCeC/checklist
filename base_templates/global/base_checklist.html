@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'global/img/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'global/css/style_posto.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Condor em casa</title>
+</head>
+
+<body>
+<header class="header">
+
+<h1 class="">
+    <a href="{% url "checklist:home" %}">
+      <img class="" src="{% static 'global/img/logo.png' %}" width="250">  
+    </a>
+  <button class="menu-toggle">☰</button>
+</h1>
+
+<nav class="menu">
+  <ul class="menu-list"> 
+    {% if user.is_authenticated %}
+        <li class="menu-item">
+          <a href="{% url "checklist:listar_loja" %}" class="menu-link">Iniciar Checklist</a>
+        </li>
+        
+       
+        <li class="menu-item">
+          <a href="" class="menu-link">Olá, {{user.username}}</a>
+        </li> 
+        <li class="menu-item">
+          <a href="{% url "checklist:logout_checklist" %}" class="menu-link">Logout</a>
+        </li> 
+  </ul>
+{% else %}
+<li class="menu-item">
+  <a href="{% url "checklist:login_checklist" %}" class="menu-link">Login</a>
+</li>   
+</nav> 
+  
+{% endif %}
+</header>
+
+
+
+
+
+<main class="content">
+    {% block content %}{% endblock content %}
+    {% include 'global/partials/_pagination.html' %}
+</main>
+
+<footer class="site-footer">
+    <p>Powered by <strong>E-Commerce Matriz</strong></p>
+</footer>
+
+  <script src="{% static 'global/js/script_posto.js' %}"></script>
+  
+
+  
+</body>
+</html>

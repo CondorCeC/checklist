@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template de E-mail</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #111;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      
+    }
+    .header {
+      background: rgb(17, 54, 71);
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      height: 60px;
+    }
+    .header h1 {
+      line-height: 40px; /* Faz a altura da linha igual à altura do .header */
+      margin: 0; /* Remove a margem padrão do h1 para melhor alinhamento */
+  }
+    .content {
+      padding: 20px;
+    }
+    .footer {
+      background: rgb(20, 147, 220);
+      color: white;
+      text-align: center;
+      padding: 10px 20px;
+      font-style: italic;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Checklist Delivery</h1>
+    </div>
+
+    <div class="content"><br>
+      Prezado Gerente {{gerente}},<br><br>
+      
+      Segue anexo o checklist aplicado em sua loja ({{nome_loja}}) no dia de hoje, {{data_formatada}}, bem como as notas separadas por categoria. 
+      A média geral dos processos de Delivery é de <b>{{media_geral}}</b>.
+      
+      <br>
+      
+      Nesse checklist são analisadas 4 áreas de abrangência dos processos de delivery da sua loja, 
+      sendo eles, separação, operação de loja, processos e equipamentos. A nota vai de 1 a 5
+      sendo 1 para nunca executam e 5 para sempre executam.<br>
+      <pre>{{medias_subtopicos}}</pre>
+      <p><b>Observação:</b> <i>{{observacao}}</i></p>
+      <hr>
+    <div class="isc-section">
+      <h4>Sua nota no ISC (Índice de Satisfação do Cliente) é de {{media_ratings}}.</h4>
+    </div>
+      
+    Você também poderá acompanhar seus resultados pelo Painel de Dados BI – E-commerce do 
+    Condor. [<a href="https://bi.cndr.me/dashboard">Bi Condor</a>]<br>
+    <br><br>
+    <i>Em anexo questões aplicadas na avaliação!</i><br><br>
+    </div>
+    
+    <div class="footer">
+      Atenciosamente,<br>
+      E-Commerce Matriz.
+    </div>
+  </div>
+</body>
+</html>

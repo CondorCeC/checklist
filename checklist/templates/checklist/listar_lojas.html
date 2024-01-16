@@ -1,0 +1,22 @@
+{% extends 'global/base_checklist.html' %}
+{% load static %}
+<script src="{% static 'global/js/script_posto.js' %}"></script>
+{% block content %}
+
+<h2>Selecione uma loja para iniciar:</h2><br>
+
+<div class="user-list">
+    {% for loja in lojas %}
+        
+            <a href="{% url 'checklist:checklistav' loja.name %}">
+                <div class="user-card">
+                    <img src="{% static 'global/img/loja_icon.jpg' %}" alt="{{ loja.name }}" class="user-image">
+                    {{ loja.name }}
+                </div>
+            </a>
+    
+    {% endfor %}
+</div>
+
+
+{% endblock %}

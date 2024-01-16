@@ -1,0 +1,167 @@
+{% extends 'global/base_checklist.html' %}
+
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<div class="box">
+  <h2> {{ tipo_avaliacao.titulo }}</h2>
+
+  
+  <form class="form-group" method="post" action="{% url "checklist:salvar_avaliacao" loja.name %}">{% csrf_token %}
+    {% for subtopico in tipo_avaliacao.subtopico_set.all %}
+    <div class="subtopico">
+
+        <fieldset>
+          <legend>{{ subtopico.nome }}</legend>
+
+            {% for questao in subtopico.questao_set.all %}
+            
+
+            <p>{{ forloop.counter }}- {{ questao.texto }}</p><br>
+                  <div class="star-rating">
+                    {% with questao_id=questao.id %}
+                    <div class="rating-options">
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="1" id="rating1_{{ questao_id }}" data-questao-id="{{ questao_id }}" required>
+                        <label for="rating1_{{ questao_id }}" class="">Nunca</label>
+                      </div><br>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="2" id="rating2_{{ questao_id }}" data-questao-id="{{ questao_id }}" required>
+                        <label for="rating2_{{ questao_id }}" class="star">Raramente</label>
+
+                      </div><br>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="3" id="rating3_{{ questao_id }}" data-questao-id="{{ questao_id }}" required>
+                        <label for="rating3_{{ questao_id }}" class="star">Eventualmente</label>
+                        
+                      </div><br>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="4" id="rating4_{{ questao_id }}" data-questao-id="{{ questao_id }}" required>
+                        <label for="rating4_{{ questao_id }}" class="star">Frequentemente</label>
+                      </div><br>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="5" id="rating5_{{ questao_id }}" data-questao-id="{{ questao_id }}" required>
+                        <label for="rating5_{{ questao_id }}" class="star">Sempre</label>
+                      </div><br>
+                      </div><br>
+                    {% endwith %}
+                  </div>
+   
+                  <style>
+                    
+                    .subtopico {
+                      text-align: left;
+                      
+                    }
+                    .rating-item {
+                      
+                      text-align: left;
+                      margin: 0 15px; 
+                    }
+                    .centered-textarea {
+                      display: block; /* Para que o alinhamento funcione corretamente */
+                      margin: 0 auto; /* Centralizar horizontalmente */
+                      text-align: center; /* Centralizar o conteúdo dentro do textarea horizontalmente */
+                      vertical-align: middle; /* Centralizar verticalmente */
+                      padding: 10px; /* Adicione algum espaço ao redor do textarea, se desejar */
+                    }
+                    .styled-textarea {
+                      display: block;
+                      margin: 0 auto;
+                      text-align: center;
+                      vertical-align: middle;
+                      padding: 10px;
+                      border: 2px solid #ccc;
+                      border-radius: 5px;
+                      resize: none;
+                      outline: none;
+                      transition: border-color 0.3s ease-in-out;
+                      
+                    }
+                    .styled-textarea:focus {
+                      border-color: #007bff;
+                    }
+                  </style>
+
+            {% endfor %}
+        </fieldset><br><br><br>
+        {% if subtopico == ultimo_subtopico %}
+        <textarea id="comentarios" name="comentarios" rows="4" cols="45" class="centered-textarea styled-textarea" placeholder="Informações adicionais sobre o funcionário avaliado..."></textarea>
+        <br><br>
+            {% endif %}
+      </div>
+    
+   
+    {% endfor %}
+  
+    <div class="button-container">
+     <button id="prev">Anterior</button>
+      
+      <button class="next-button" data-subtopico="{{ subtopico.id }}">Próximo</button>
+
+
+      <button type="submit" id="save" onclick="return confirmarFinalizacao();">Salvar Avaliação</button>
+      
+    </div>
+    <script>
+      function confirmarFinalizacao() {
+          var confirmacao = confirm("Você deseja realmente finalizar a avaliação?");
+          return confirmacao; 
+      }
+
+
+  $(document).ready(function() {
+    var currentSubtopico = $('.subtopico:first').show();
+
+    $('.next-button').click(function() {
+        if (currentSubtopico.next('.subtopico').length) {
+            if (areAllOptionsSelected(currentSubtopico)) {
+                currentSubtopico.hide();
+                currentSubtopico = currentSubtopico.next('.subtopico');
+                currentSubtopico.show();
+            }
+        }
+        checkButtons();
+    });
+
+    $('#prev').click(function() {
+        if (currentSubtopico.prev('.subtopico').length) {
+            currentSubtopico.hide();
+            currentSubtopico = currentSubtopico.prev('.subtopico');
+            currentSubtopico.show();
+        }
+        checkButtons();
+    });
+
+    function checkButtons() {
+        $('#prev').prop('disabled', !currentSubtopico.prev('.subtopico').length);
+
+        if (currentSubtopico.next('.subtopico').length) {
+            $('.next-button').show();
+            $('#save').hide();
+        } else {
+            $('.next-button').hide();
+            $('#save').show();
+        }
+    }
+
+    function areAllOptionsSelected(subtopico) {
+
+        var allQuestionsAnswered = true;
+        subtopico.find('.rating-options').each(function() {
+            if ($(this).find('input[type="radio"]:checked').length === 0) {
+                allQuestionsAnswered = false;
+                return false;
+            }
+        });
+        return allQuestionsAnswered;
+    }
+
+    checkButtons();
+});
+    </script>
+  </form>
+
+</div>
+{% endblock %}
+

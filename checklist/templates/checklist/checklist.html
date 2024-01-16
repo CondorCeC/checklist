@@ -1,0 +1,143 @@
+{% extends 'global/base_checklist.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="box">
+<h2>Checklist Condor em Casa</h2>
+{% for subtopico in subtopicos %}
+{{subtopico.nome_topico}}
+{% endfor %}
+
+<form class="form-group" method="post" action="{% url "checklist:salvar_avaliacao" loja.name %}">{% csrf_token %}
+    <div class="subtopico">
+        <fieldset>
+          <legend>Questões</legend>
+            {% for questao in resposta %}
+            <p class="questao-texto">{{ forloop.counter }} - {{ questao.texto }}</p>
+                  <div class="star-rating">
+                    {% with questao_id=questao.id %}
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="1" id="rating1_{{ questao_id }}" required>
+                        <label for="rating1_{{ questao_id }}" class="star">&#9733;</label>
+                        <div class="label-description">Péssimo</div><br>
+                      </div>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="2" id="rating2_{{ questao_id }}" required>
+                        <label for="rating2_{{ questao_id }}" class="star">&#9733;</label>
+                        <div class="label-description">Ruim</div><br>
+                      </div>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="3" id="rating3_{{ questao_id }}" required>
+                        <label for="rating3_{{ questao_id }}" class="star">&#9733;</label>
+                        <div class="label-description">Ok</div><br>
+                      </div>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="4" id="rating4_{{ questao_id }}" required>
+                        <label for="rating4_{{ questao_id }}" class="star">&#9733;</label>
+                        <div class="label-description">Bom</div><br>
+                      </div>
+                      <div class="rating-item">
+                        <input type="radio" name="resposta_{{ questao_id }}" value="5" id="rating5_{{ questao_id }}" required>
+                        <label for="rating5_{{ questao_id }}" class="star">&#9733;</label>
+                        <div class="label-description">Excelente</div><br>
+                      </div>
+                      {% endwith %}
+                      </div><br><br><br>
+               
+                {% endfor %}
+            </fieldset><br><br>
+    </div>
+    <textarea id="comentarios" name="comentarios" rows="4" cols="80" class="centered-textarea styled-textarea" placeholder="Informações adicionais..."></textarea>
+
+<style>
+ textarea#comentarios {
+  display: block; 
+  margin: 0 auto;
+  width: 80%;
+} 
+
+.styled-textarea {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  
+}
+.styled-textarea:focus {
+  border-color: #007bff;
+}
+.subtopico {
+  text-align: left;
+}
+.questao-texto {
+  font-size: 17px;
+}
+.star-rating {
+  display: inline-block; 
+  font-size: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.star {
+  font-size: 25px; 
+}
+.star-rating label {
+  margin-left: 12px; 
+}
+.label-description {
+  margin-left: 12px; /* Ajuste este valor conforme necessário */
+}
+.rating-item {
+  display: inline-block;
+  text-align: center;
+  margin: 0 10px;
+}
+.star-rating input[type=radio] {
+  display: none;
+}
+                  
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type=radio]:checked ~ label,
+.star-rating input[type=radio]:checked + label:hover,
+.star-rating input[type=radio]:checked + label:hover ~ label,
+.star-rating input[type=radio]:checked ~ label:hover,
+.star-rating input[type=radio]:checked ~ label:hover ~ label {
+color: #f5a623;
+      }
+                               
+</style>
+
+<div class="button-container">
+    <button type="submit" id="save" onclick="return confirmarFinalizacao();">Salvar Avaliação</button>
+</div>
+<script>
+    function confirmarFinalizacao() {
+        var confirmacao = confirm("Você deseja realmente finalizar a avaliação?");
+        return confirmacao; 
+    }
+    document.querySelectorAll('.star-rating input[type=radio]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+          let currentRating = this.value;
+          let stars = this.parentElement.parentElement.querySelectorAll('.star');
+          stars.forEach((star, index) => {
+              if(index < currentRating) {
+                  star.style.color = '#f5a623';
+              } else {
+                  star.style.color = '#bbb';
+              }
+          });
+      });
+  });
+</script>
+</form>
+
+
+{% endblock %}
